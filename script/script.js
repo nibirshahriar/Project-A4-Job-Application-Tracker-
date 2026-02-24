@@ -20,10 +20,20 @@ const filterSection = document.getElementById("filtered-section");
 let currentStatus = "all";
 
 function calculateCount() {
-  total.innerText = allCards.children.length;
+  const totalCurrent = allCards.children.length;
+
+  total.innerText = totalCurrent;
   interview.innerText = interviewList.length;
   rejected.innerText = rejectedList.length;
-  jobs.innerText = allCards.children.length;
+
+  //Dynamic jobs
+  if (currentStatus === "all-filter-btn" || currentStatus === "all") {
+    jobs.innerText = `${totalCurrent}`;
+  } else if (currentStatus === "interview-filter-btn") {
+    jobs.innerText = `${interviewList.length} of ${totalCurrent}`;
+  } else if (currentStatus === "rejected-filter-btn") {
+    jobs.innerText = `${rejectedList.length} of ${totalCurrent}`;
+  }
 }
 
 calculateCount();
@@ -56,6 +66,7 @@ function toggleStyle(id) {
     filterSection.classList.remove("hidden");
     renderRejected();
   }
+  calculateCount();
 }
 
 mainContainer.addEventListener("click", function (event) {
@@ -195,6 +206,7 @@ function renderInterview() {
 
     filterSection.appendChild(div);
   }
+  calculateCount();
 }
 
 // RENDER REJECTED
@@ -242,4 +254,5 @@ function renderRejected() {
 
     filterSection.appendChild(div);
   }
+  calculateCount();
 }
