@@ -15,6 +15,10 @@ const allCards = document.getElementById("job-cards");
 // delegation
 const mainContainer = document.querySelector("main");
 
+// filterd
+const filterSection = document.getElementById("filtered-section");
+let currentStatus = "all";
+
 function calculateCount() {
   total.innerText = allCards.children.length;
   interview.innerText = interviewList.length;
@@ -24,7 +28,6 @@ function calculateCount() {
 calculateCount();
 
 function toggleStyle(id) {
-  //button reset
   allFilterBtn.classList.remove("btn-primary", "text-white");
   interviewFilterBtn.classList.remove("btn-primary", "text-white");
   rejectedFilterBtn.classList.remove("btn-primary", "text-white");
@@ -33,11 +36,25 @@ function toggleStyle(id) {
   interviewFilterBtn.classList.add("bg-gray-200", "text-black");
   rejectedFilterBtn.classList.add("bg-gray-200", "text-black");
 
-  //  Selected button active style
   const selectedBtn = document.getElementById(id);
 
   selectedBtn.classList.remove("bg-gray-200", "text-black");
   selectedBtn.classList.add("btn-primary", "text-white");
+
+  currentStatus = id;
+
+  if (id === "all-filter-btn") {
+    allCards.classList.remove("hidden");
+    filterSection.classList.add("hidden");
+  } else if (id === "interview-filter-btn") {
+    allCards.classList.add("hidden");
+    filterSection.classList.remove("hidden");
+    renderInterview();
+  } else if (id === "rejected-filter-btn") {
+    allCards.classList.add("hidden");
+    filterSection.classList.remove("hidden");
+    renderRejected();
+  }
 }
 
 mainContainer.addEventListener("click", function (event) {
@@ -113,3 +130,78 @@ mainContainer.addEventListener("click", function (event) {
     calculateCount();
   }
 });
+
+function renderInterview() {
+  filterSection.innerHTML = "";
+
+  for (let job of interviewList) {
+    let div = document.createElement("div");
+    div.className =
+      "jcard flex justify-between items-start mt-8 p-8 rounded-xl bg-white shadow-sm";
+
+    div.innerHTML = `
+      <div class="space-y-6">
+        <div>
+          <p class="jobName text-2xl font-bold">${job.jobName}</p>
+          <p class="infoName text-[#64748B]">${job.infoName}</p>
+        </div>
+
+        <p class="remote text-[#64748B]">${job.remote}</p>
+
+        <p class="state inline-flex items-center px-3 py-2 text-xs font-semibold rounded bg-green-100 text-green-700">
+          INTERVIEW
+        </p>
+
+        <p class="notes text-[#64748B]">${job.notes}</p>
+
+        <div class="flex gap-5">
+          <button class="interview-btn btn text-green-400 border-green-400">INTERVIEW</button>
+          <button class="Rejected-btn btn text-red-400 border-red-400">REJECTED</button>
+        </div>
+      </div>
+
+      <div class="btn-delete w-10 h-9 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition">
+        <img src="./assets/Delete.png" class="w-4 h-4 opacity-60">
+      </div>
+    `;
+
+    filterSection.appendChild(div);
+  }
+}
+function renderRejected() {
+  filterSection.innerHTML = "";
+
+  for (let job of rejectedList) {
+    let div = document.createElement("div");
+    div.className =
+      "jcard flex justify-between items-start mt-8 p-8 rounded-xl bg-white shadow-sm";
+
+    div.innerHTML = `
+      <div class="space-y-6">
+        <div>
+          <p class="jobName text-2xl font-bold">${job.jobName}</p>
+          <p class="infoName text-[#64748B]">${job.infoName}</p>
+        </div>
+
+        <p class="remote text-[#64748B]">${job.remote}</p>
+
+        <p class="state inline-flex items-center px-3 py-2 text-xs font-semibold rounded bg-red-100 text-red-700">
+          REJECTED
+        </p>
+
+        <p class="notes text-[#64748B]">${job.notes}</p>
+
+        <div class="flex gap-5">
+          <button class="interview-btn btn text-green-400 border-green-400">INTERVIEW</button>
+          <button class="Rejected-btn btn text-red-400 border-red-400">REJECTED</button>
+        </div>
+      </div>
+
+      <div class="btn-delete w-10 h-9 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition">
+        <img src="./assets/Delete.png" class="w-4 h-4 opacity-60">
+      </div>
+    `;
+
+    filterSection.appendChild(div);
+  }
+}
